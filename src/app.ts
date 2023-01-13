@@ -4,10 +4,11 @@ import dotenv from 'dotenv'
 import path from 'path'
 import cookieParser from 'cookie-parser'
 import AdminRoutes from './routes/Admin'
+import {connectDB} from './config/database'
 
 const app = express()
 dotenv.config()
-
+connectDB()
 //Middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: false}))

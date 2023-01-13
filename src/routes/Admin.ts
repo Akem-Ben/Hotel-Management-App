@@ -1,8 +1,9 @@
 import express from 'express'
-import { adminRegister } from '../controllers/adminControllers'
+import { adminLogin, adminRegister } from '../controllers/adminControllers'
 
 const router = express.Router()
 
 
 router.post('/register', adminRegister)
+router.post('/login', adminLogin)
 export default router

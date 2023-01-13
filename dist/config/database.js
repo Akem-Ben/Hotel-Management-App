@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.conncetDB = void 0;
+exports.connectDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const conncetDB = async () => {
+const connectDB = async () => {
     try {
-        const conn = await mongoose_1.default.connect("mongodb://localhost:27017/abn_hotels", async () => {
+        const conn = mongoose_1.default.connect("mongodb://localhost:27017/abn_hotels", () => {
             console.log(`MongoDB connected`);
         });
     }
@@ -15,4 +15,4 @@ const conncetDB = async () => {
         console.log(err);
     }
 };
-exports.conncetDB = conncetDB;
+exports.connectDB = connectDB;

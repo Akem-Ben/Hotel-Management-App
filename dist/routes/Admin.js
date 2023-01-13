@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const adminControllers_1 = require("../controllers/adminControllers");
 const router = express_1.default.Router();
 router.post('/register', adminControllers_1.adminRegister);
+router.post('/login', adminControllers_1.adminLogin);
 exports.default = router;

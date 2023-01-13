@@ -9,8 +9,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const Admin_1 = __importDefault(require("./routes/Admin"));
+const database_1 = require("./config/database");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
+(0, database_1.connectDB)();
 //Middleware
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
