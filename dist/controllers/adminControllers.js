@@ -3,8 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminLogin = exports.adminRegister = void 0;
+exports.createRoom = exports.adminLogin = exports.adminRegister = void 0;
 const adminModel_1 = __importDefault(require("../model/adminModel"));
+const roomsModel_1 = __importDefault(require("../model/roomsModel"));
 const utils_1 = require("../Utils/utils");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 //===Register===//
@@ -84,6 +85,7 @@ const adminLogin = async (req, res) => {
                 res.cookie(`token`, token);
                 return res.status(200).json({
                     message: `Successful login`,
+                    id: admin._id,
                     role: admin.role,
                     email: admin.email
                 });
@@ -101,3 +103,49 @@ const adminLogin = async (req, res) => {
     }
 };
 exports.adminLogin = adminLogin;
+//===CREATE ROOMS===//
+const createRoom = async (req, res) => {
+    try {
+        const id = req.params._id;
+        const admin = await adminModel_1.default.findOne({ _id: id });
+        if (!admin) {
+            return res.status(400).json({
+                message: "You are not an admin"
+            });
+        }
+        if (admin) {
+            const { roomType, roomNumber, roomPrice } = req.body;
+            const validateInput = utils_1.roomSchema.validate(req.body, utils_1.option);
+            if (validateInput.error) {
+                return res.status(400).json({
+                    Error: validateInput.error.details[0].message
+                });
+            }
+            const room = await roomsModel_1.default.findOne({ roomNumber });
+            if (!room) {
+                let newRoom = await roomsModel_1.default.create({
+                    roomType,
+                    roomNumber,
+                    roomPrice,
+                    roomStatus: "",
+                    roomImage: ""
+                });
+                return res.status(201).json({
+                    message: "Room successfully created",
+                    newRoom
+                });
+            }
+            return res.status(400).json({
+                message: `Room already exists`,
+                Error: `Room already exists`
+            });
+        }
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: "Internal Server Error",
+            Error: "/admin/create-room"
+        });
+    }
+};
+exports.createRoom = createRoom;

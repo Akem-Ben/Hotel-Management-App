@@ -15,6 +15,13 @@ export const loginSchema = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
 })
+export const roomSchema = Joi.object().keys({
+    roomType: Joi.string().required(),
+    roomNumber: Joi.string().required(),
+    roomPrice: Joi.number().required(),
+    // roomStatus: Joi.string(),
+    // roomImage: Joi.string()
+})
 
 
 export const option = {

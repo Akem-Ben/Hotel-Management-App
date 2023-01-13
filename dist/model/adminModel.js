@@ -53,6 +53,8 @@ const adminSchema = new mongoose_1.Schema({
     role: {
         type: String
     }
+}, {
+    timestamps: true
 });
 const Admin = mongoose_1.default.model('Admin', adminSchema);
 exports.default = Admin;

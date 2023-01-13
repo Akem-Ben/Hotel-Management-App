@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express'
 import Admin from '../model/adminModel'
-import { registerSchema, option, SaltGenerator, PasswordHash, loginSchema, tokenGenerator } from '../Utils/utils'
+import Room  from '../model/roomsModel'
+import { registerSchema, option, SaltGenerator, PasswordHash, loginSchema, tokenGenerator, roomSchema } from '../Utils/utils'
 import bcrypt from 'bcryptjs'
 
 //===Register===//
@@ -81,6 +82,7 @@ export const adminLogin = async(req:Request, res:Response) => {
                 res.cookie(`token`, token)
                 return res.status(200).json({
                     message: `Successful login`,
+                    id: admin._id,
                     role: admin.role,
                     email: admin.email
                 })
@@ -93,6 +95,52 @@ export const adminLogin = async(req:Request, res:Response) => {
         return res.status(500).json({
             message: `Internal Server Error`,
             Error: `/admin/login`
+        })
+    }
+}
+
+//===CREATE ROOMS===//
+
+export const createRoom = async (req:Request,res:Response)=>{
+    try{
+        const id = req.params._id
+        const admin = await Admin.findOne({_id:id})
+        if(!admin){
+            return res.status(400).json({
+                message: "You are not an admin"
+            })
+        }
+        if(admin){
+            const {roomType, roomNumber, roomPrice} = req.body
+            const validateInput = roomSchema.validate(req.body, option)
+            if(validateInput.error){
+                return res.status(400).json({
+                    Error: validateInput.error.details[0].message
+                })
+            }
+            const room = await Room.findOne({roomNumber})
+            if(!room){
+                let newRoom = await Room.create({
+                    roomType,
+                    roomNumber,
+                    roomPrice,
+                    roomStatus: "",
+                    roomImage: ""
+                })
+                return res.status(201).json({
+                    message: "Room successfully created",
+                    newRoom
+                })
+            }
+            return res.status(400).json({
+                message: `Room already exists`,
+                Error: `Room already exists`
+            })
+        }
+    }catch(err){
+        return res.status(500).json({
+            message: "Internal Server Error",
+            Error: "/admin/create-room"
         })
     }
 }

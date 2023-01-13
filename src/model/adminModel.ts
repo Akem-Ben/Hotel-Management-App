@@ -9,7 +9,7 @@ export interface IAdmin {
     salt: string,
     lng: number,
     lat: number,
-    role: string
+    role: string,
 }
 
 const adminSchema = new Schema({
@@ -41,7 +41,11 @@ const adminSchema = new Schema({
     role: {
         type: String
     }
-})
+},
+    {
+        timestamps: true
+    }
+)
 
 const Admin = mongoose.model<IAdmin>('Admin', adminSchema)
 
